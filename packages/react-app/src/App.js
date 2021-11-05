@@ -25,10 +25,10 @@ import { fetchSafeBalances, fetchSafeIncomingTxs } from "./utils/requests";
 const config = {
   network: "arbitrum", // set network this will be using mainnet/xdai
   logo: logo, // change the logo here
-  projectName: 'YEET',
+  projectName: 'McArbi NFT',
   mainColor: '#1d86cc',
   launch: "2021-11-09 16:00 ", // end date of the yeet
-  goal: 20, // goal of the yeet
+  goal: 10, // goal of the yeet
   gnosisSafe: "0xc4AbE253068AFD6B71F0a01b19256eeeeFcF9551",
   // nativeToken: true,  // not used
   token: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1", // token yeeting in WETH
