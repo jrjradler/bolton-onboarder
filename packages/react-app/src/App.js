@@ -32,7 +32,7 @@ const config = {
   gnosisSafe: "0xc4AbE253068AFD6B71F0a01b19256eeeeFcF9551",
   // nativeToken: true,  // not used
   token: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1", // token yeeting in WETH
-  tokenSymbol: "Ξ", // symbol to dsiplay
+  tokenSymbol: "aΞ", // symbol to dsiplay
   website: "https://hackmd.io/@Dekan/By7a16Mwt", // information site
 };
 
