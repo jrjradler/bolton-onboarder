@@ -2,7 +2,7 @@ import { utils, BigNumber } from "ethers";
 
 import React, { useEffect, useState } from "react";
 
-import logo from "./dh.png";
+import logo from "./arbichili.png";
 import useWeb3Modal from "./hooks/useWeb3Modal";
 import {
   ChakraProvider,
@@ -23,17 +23,17 @@ import { ArrowForwardIcon, CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { fetchSafeBalances, fetchSafeIncomingTxs } from "./utils/requests";
 
 const config = {
-  network: "mainnet", // set network this will be using mainnet/xdai
+  network: "arbitrum", // set network this will be using mainnet/xdai
   logo: logo, // change the logo here
   projectName: 'YEET',
-  mainColor: '#fe1d5b',
-  launch: "2021-11-07 16:00 ", // end date of the yeet
+  mainColor: '#1d86cc',
+  launch: "2021-11-09 16:00 ", // end date of the yeet
   goal: 20, // goal of the yeet
-  gnosisSafe: "0xEE5504F0a3604d66470aE3c803A762D425000523",
+  gnosisSafe: "0xc4AbE253068AFD6B71F0a01b19256eeeeFcF9551",
   // nativeToken: true,  // not used
-  token: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", // token yeeting in WETH
+  token: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1", // token yeeting in WETH
   tokenSymbol: "Ξ", // symbol to dsiplay
-  website: "https://hackmd.io/@daohaus/H17m16ZwK", // information site
+  website: "https://hackmd.io/@Dekan/By7a16Mwt", // information site
 };
 
 // const addresses = {
@@ -121,14 +121,16 @@ function SafeList({ provider }) {
         setSafeTxInfoAll(ethWethIn);
 
         setSafeTxInfo(ethWethIn.filter((tx) => tx.from === account));
-        console.log(ethWethIn, toggleList);
+        console.log('ethWethIn, toggleList', ethWethIn, toggleList);
         let total = 0;
         ethWethIn
           .filter((tx) => tx.from === account)
           .forEach((bal) => {
             total += parseFloat(utils.formatEther(bal.value));
           });
-        // console.log("total", total);
+        console.log("total", total);
+        console.log("bal?.balance", bal?.balance);
+        console.log("tokenBal?.balance", tokenBal?.balance);
         setBoban(
           (total /
             utils.formatEther(
