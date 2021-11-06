@@ -23,16 +23,16 @@ import { ArrowForwardIcon, CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { fetchSafeBalances, fetchSafeIncomingTxs } from "./utils/requests";
 
 const config = {
-  network: "arbitrum", // set network this will be using mainnet/xdai
+  network: "mainnet", // set network this will be using mainnet/xdai
   logo: logo, // change the logo here
   projectName: 'McArbi NFT',
   mainColor: '#1d86cc',
   launch: "2021-11-09 16:00 ", // end date of the yeet
   goal: 10, // goal of the yeet
-  gnosisSafe: "0xc4AbE253068AFD6B71F0a01b19256eeeeFcF9551",
+  gnosisSafe: "0x6032DEd1D330d0672253BDfC9a56C971DeE0683F",
   // nativeToken: true,  // not used
-  token: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1", // token yeeting in WETH
-  tokenSymbol: "aΞ", // symbol to dsiplay
+  token: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", // token yeeting in WETH
+  tokenSymbol: "ETH", // symbol to dsiplay
   website: "https://hackmd.io/@Dekan/By7a16Mwt", // information site
 };
 
