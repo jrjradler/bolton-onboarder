@@ -2,8 +2,10 @@ import { utils, BigNumber } from "ethers";
 
 import React, { useEffect, useState } from "react";
 
-import logo from "./arbichili.png";
+import logo from "./padawagmi.png";
+
 import useWeb3Modal from "./hooks/useWeb3Modal";
+
 import {
   ChakraProvider,
   Box,
@@ -18,6 +20,7 @@ import {
   Link,
   useToast,
 } from "@chakra-ui/react";
+
 import { ArrowForwardIcon, CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 
 import { fetchSafeBalances, fetchSafeIncomingTxs } from "./utils/requests";
@@ -25,15 +28,15 @@ import { fetchSafeBalances, fetchSafeIncomingTxs } from "./utils/requests";
 const config = {
   network: "mainnet", // set network this will be using mainnet/xdai
   logo: logo, // change the logo here
-  projectName: 'McArbi NFT',
-  mainColor: '#1d86cc',
-  launch: "2021-11-09 16:00 ", // end date of the yeet
-  goal: 10, // goal of the yeet
+  projectName: 'Padawagmi DAO Discord',
+  mainColor: '#FFE81F',
+  launch: "2021-12-09 16:00 ", // end date of the yeet
+  goal: 2, // goal of the yeet
   gnosisSafe: "0x6032DEd1D330d0672253BDfC9a56C971DeE0683F",
   // nativeToken: true,  // not used
   token: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", // token yeeting in WETH
   tokenSymbol: "ETH", // symbol to dsiplay
-  website: "https://hackmd.io/@Dekan/By7a16Mwt", // information site
+  website: "https://discord.gg/HM97NeDJ5P", // information site
 };
 
 // const addresses = {
@@ -155,7 +158,7 @@ function SafeList({ provider }) {
       <Flex justifyContent='space-around'>
         <Box ml={5} mr={5}>
           <Text color='#E5E5E5' fontSize={{ base: "xl" }}>
-            Min Goal
+            Goal
           </Text>
           <Text color={config.mainColor} fontSize={{ base: "2xl", lg: "5xl" }}>
             {goal} {config.tokenSymbol}
@@ -415,7 +418,7 @@ function App() {
               paddingBottom={8}
             >
               <Text paddingBottom={2} align='center' color={"#E5E5E5"}>
-                Yeet ({config.network}) funds to:{" "}
+                Send ETH to:{" "}
               </Text>
               <Flex
                 direction='row'
@@ -461,12 +464,12 @@ function App() {
             >
               <Text>
                 <Link href={config.website} isExternal>
-                  More about {config.projectName} <ExternalLinkIcon mx='2px' />
+                   {config.projectName} <ExternalLinkIcon mx='2px' />
                 </Link>
               </Text>
               <Text>
-                <Link href={"https://daohaus.club/"} isExternal>
-                  Bolt on for DAOhaus <ExternalLinkIcon mx='2px' />
+                <Link href={"https://gnosis-safe.io/app/#/safes/0x6032DEd1D330d0672253BDfC9a56C971DeE0683F/"} isExternal>
+                  Multisig on Gnosis <ExternalLinkIcon mx='2px' />
                 </Link>
               </Text>
             </HStack>
