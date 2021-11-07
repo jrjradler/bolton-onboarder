@@ -31,7 +31,7 @@ const config = {
   projectName: 'Padawagmi DAO Discord',
   mainColor: '#FFE81F',
   launch: "2021-12-09 16:00 ", // end date of the yeet
-  goal: 2, // goal of the yeet
+  goal: 327, // goal of the yeet
   gnosisSafe: "0x6032DEd1D330d0672253BDfC9a56C971DeE0683F",
   // nativeToken: true,  // not used
   token: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", // token yeeting in WETH
