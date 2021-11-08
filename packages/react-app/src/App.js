@@ -385,7 +385,6 @@ function App() {
         <Stack spacing={2}>
           <Stack spacing={2}>
             <Flex justifyContent='space-between' alignItems='center' p={0}>
-              <ArrowForwardIcon p={0} />
               <Flex
                 justifyContent='flex-end'
                 alignItems='center'
