@@ -204,14 +204,6 @@ function SafeList({ provider }) {
           </Box>
         </Flex>
       )}
-      <Flex
-        border={"solid"}
-        rounded={"sm"}
-        borderColor={"#272727"}
-        borderWidth={"thin"}
-        ml={20}
-        mr={20}
-      >
         <Box w='100%'>
           <Flex backgroundColor='#0C0C0C' flexDirection={"column"}>
             {safeTxInfo &&
@@ -255,8 +247,6 @@ function SafeList({ provider }) {
               ))}
           </Flex>
         </Box>
-      </Flex>
-      {/* <Button onClick={()=> setToggleList(true)}>vlivk</Button> */}
     </>
   );
 }
