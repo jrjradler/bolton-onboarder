@@ -359,7 +359,7 @@ function SafeList({ provider }) {
                             </Box>
                             <Box m={10}>
                               <Text fontSize={"lg"} color={"#E5E5E5"}>
-                                {contributor.amount}
+                              {parseFloat(contributor.amount).toFixed(4)}
                               </Text>
                             </Box>
                           </Flex>
@@ -581,16 +581,25 @@ function App() {
               paddingTop={{ base: "2", lg: "6" }}
               paddingBottom={{ base: "4", lg: "8" }} // need to find the additional margin={2} so we can remove this
             >
-              <Text>
-                <Link href={config.website} isExternal>
-                  More about {config.projectName} <ExternalLinkIcon mx="2px" />
-                </Link>
-              </Text>
-              <Text>
-                <Link href={"https://daohaus.club/"} isExternal>
-                  Bolt on for DAOhaus <ExternalLinkIcon mx="2px" />
-                </Link>
-              </Text>
+              <Box paddingTop={90}>
+                <Text>
+                  <Link href={config.website} isExternal>
+                    {config.projectName} <ExternalLinkIcon mx="2px" />
+                  </Link>
+                </Text>
+              </Box>
+              <Box paddingTop={90}>
+                <Text>
+                  <Link
+                    href={
+                      "https://gnosis-safe.io/app/#/safes/0x6032DEd1D330d0672253BDfC9a56C971DeE0683F/"
+                    }
+                    isExternal
+                  >
+                    Multisig on Gnosis <ExternalLinkIcon mx="2px" />
+                  </Link>
+                </Text>
+              </Box>
             </HStack>
           </Stack>
         </Stack>
