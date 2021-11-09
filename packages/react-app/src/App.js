@@ -23,7 +23,7 @@ import {
   Tab,
   TabList,
   TabPanel,
-  TabPanels
+  TabPanels,
 } from "@chakra-ui/react";
 import { ArrowForwardIcon, CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 
@@ -41,7 +41,7 @@ const config = {
   token: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", // token yeeting in WETH
   tokenSymbol: "ETH", // symbol to dsiplay
   website: "https://discord.gg/HM97NeDJ5P",
-  showLeaderboard: true // information site
+  showLeaderboard: true, // information site
 };
 
 // const addresses = {
@@ -70,7 +70,7 @@ function CopyToast({ toCopy }) {
           description: "Address copied to clipboard",
           status: "success",
           duration: 3000,
-          isClosable: true
+          isClosable: true,
         });
       }}
     />
@@ -91,11 +91,11 @@ function SafeList({ provider }) {
     async function fetchAccount() {
       try {
         const balance = await fetchSafeBalances(config.network, {
-          safeAddress: config.gnosisSafe
+          safeAddress: config.gnosisSafe,
         });
-        const bal = balance.find(bal => bal.tokenAddress === null);
+        const bal = balance.find((bal) => bal.tokenAddress === null);
         const tokenBal = balance.find(
-          bal =>
+          (bal) =>
             bal.tokenAddress &&
             bal.tokenAddress.toLowerCase() === config.token.toLowerCase()
         );
@@ -113,7 +113,7 @@ function SafeList({ provider }) {
         const accounts = await provider.listAccounts();
         setAccount(accounts[0]);
         const safeTx = await fetchSafeIncomingTxs(config.network, {
-          safeAddress: config.gnosisSafe
+          safeAddress: config.gnosisSafe,
         });
 
         // console.log("balance", balance);
@@ -121,7 +121,7 @@ function SafeList({ provider }) {
 
         // weth or eth
         let ethWethIn = safeTx?.results.filter(
-          tx =>
+          (tx) =>
             tx.tokenAddress === null ||
             tx.tokenAddress.toLowerCase() === config.token.toLowerCase()
         );
@@ -134,16 +134,16 @@ function SafeList({ provider }) {
             ))
         );
         const leaderBoardSorted = Object.keys(txList)
-          .map(key => ({ from: key, amount: txList[key] }))
+          .map((key) => ({ from: key, amount: txList[key] }))
           .sort((a, b) => {
             return parseInt(b.amount.sub(a.amount).toString());
           })
-          .map(tx => ({
+          .map((tx) => ({
             from: tx.from,
-            amount: utils.formatEther(tx.amount.toString())
+            amount: utils.formatEther(tx.amount.toString()),
           }));
         const promises = [];
-        leaderBoardSorted.forEach(x => {
+        leaderBoardSorted.forEach((x) => {
           promises.push(provider.lookupAddress(x.from));
         });
         const enses = await Promise.all(promises);
@@ -155,12 +155,12 @@ function SafeList({ provider }) {
 
         setLeaderboard(leaderBoardSorted);
 
-        setSafeTxInfo(ethWethIn.filter(tx => tx.from === account));
+        setSafeTxInfo(ethWethIn.filter((tx) => tx.from === account));
         console.log("ethWethIn", ethWethIn);
         let total = 0;
         ethWethIn
-          .filter(tx => tx.from === account)
-          .forEach(bal => {
+          .filter((tx) => tx.from === account)
+          .forEach((bal) => {
             total += parseFloat(utils.formatEther(bal.value));
           });
         console.log("total", total);
@@ -239,25 +239,27 @@ function SafeList({ provider }) {
       )}
       <Tabs>
         <TabList ml={20} mr={20}>
-          <Tab
-            color={"#E5E5E5"}
-            rounded={"4px"}
-            _selected={{
-              color: "white",
-              borderColor: config.mainColor,
-              borderWidth: "thin"
-            }}
-          >
-            Your Contributions
-          </Tab>
-          {config.showLeaderboard && (
+          <Box paddingBottom={5}>
             <Tab
               color={"#E5E5E5"}
               rounded={"4px"}
+              height={8}
               _selected={{ color: "black", bg: config.mainColor }}
             >
-              Leaderboard
+              Your Contributions
             </Tab>
+          </Box>
+          {config.showLeaderboard && (
+            <Box paddingBottom={5}>
+              <Tab
+                color={"#E5E5E5"}
+                rounded={"4px"}
+                height={8}
+                _selected={{ color: "black", bg: config.mainColor }}
+              >
+                Leaderboard
+              </Tab>
+            </Box>
           )}
         </TabList>
         <TabPanels>
@@ -359,7 +361,7 @@ function SafeList({ provider }) {
                             </Box>
                             <Box m={10}>
                               <Text fontSize={"lg"} color={"#E5E5E5"}>
-                              {parseFloat(contributor.amount).toFixed(4)}
+                                {parseFloat(contributor.amount).toFixed(4)}
                               </Text>
                             </Box>
                           </Flex>
@@ -444,7 +446,7 @@ function calculateTimeLeft() {
       Days: Math.floor(difference / (1000 * 60 * 60 * 24)),
       Hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
       Minutes: Math.floor((difference / 1000 / 60) % 60),
-      Seconds: Math.floor((difference / 1000) % 60)
+      Seconds: Math.floor((difference / 1000) % 60),
     };
   }
 
@@ -470,7 +472,7 @@ function App() {
       return;
     }
     const setup = async () => {
-      provider.provider.on("chainChanged", chainId => {
+      provider.provider.on("chainChanged", (chainId) => {
         window.location.reload();
       });
     };
