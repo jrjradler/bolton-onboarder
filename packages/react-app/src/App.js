@@ -135,7 +135,9 @@ function SafeList({ provider }) {
         );
         const leaderBoardSorted = Object.keys(txList)
         .map((key) => ({ from: key, amount: txList[key] }))
-        .sort((a, b) => (a.amount < b.amount ? 0 : -1))
+        .sort((a, b) => {
+          return parseInt(b.amount.sub(a.amount).toString());
+          })
         .map((tx) => ({
           from: tx.from,
           amount: utils.formatEther(tx.amount.toString()),
@@ -242,7 +244,7 @@ function SafeList({ provider }) {
           <Tab
            color={"#E5E5E5"}
            rounded={"4px"}
-           _selected={{ color: "black", bg: config.mainColor }}
+           _selected={{ color: "white", borderColor: config.mainColor, borderWidth:"thin" }}
           >
             Your Contributions
           </Tab>
