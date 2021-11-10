@@ -3,9 +3,7 @@ import { utils, BigNumber } from "ethers";
 import React, { useEffect, useState } from "react";
 
 import logo from "./padawagmi.png";
-
 import useWeb3Modal from "./hooks/useWeb3Modal";
-
 import {
   ChakraProvider,
   Box,
@@ -25,7 +23,7 @@ import {
   TabPanel,
   TabPanels,
 } from "@chakra-ui/react";
-import { ArrowForwardIcon, CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 
 import { fetchSafeBalances, fetchSafeIncomingTxs } from "./utils/requests";
 
@@ -40,8 +38,8 @@ const config = {
   // nativeToken: true,  // not used
   token: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", // token yeeting in WETH
   tokenSymbol: "ETH", // symbol to dsiplay
-  website: "https://discord.gg/HM97NeDJ5P",
-  showLeaderboard: true, // information site
+  website: "https://discord.gg/HM97NeDJ5P", // information site
+  showLeaderboard: true, // show leaderboard boolean
 };
 
 // const addresses = {
@@ -70,7 +68,7 @@ function CopyToast({ toCopy }) {
           description: "Address copied to clipboard",
           status: "success",
           duration: 3000,
-          isClosable: true,
+          isClosable: true
         });
       }}
     />
@@ -91,11 +89,11 @@ function SafeList({ provider }) {
     async function fetchAccount() {
       try {
         const balance = await fetchSafeBalances(config.network, {
-          safeAddress: config.gnosisSafe,
+          safeAddress: config.gnosisSafe
         });
-        const bal = balance.find((bal) => bal.tokenAddress === null);
+        const bal = balance.find(bal => bal.tokenAddress === null);
         const tokenBal = balance.find(
-          (bal) =>
+          bal =>
             bal.tokenAddress &&
             bal.tokenAddress.toLowerCase() === config.token.toLowerCase()
         );
@@ -113,7 +111,7 @@ function SafeList({ provider }) {
         const accounts = await provider.listAccounts();
         setAccount(accounts[0]);
         const safeTx = await fetchSafeIncomingTxs(config.network, {
-          safeAddress: config.gnosisSafe,
+          safeAddress: config.gnosisSafe
         });
 
         // console.log("balance", balance);
@@ -129,9 +127,9 @@ function SafeList({ provider }) {
         let txList = {};
         ethWethIn.map(
           (tx, idx) =>
-            (txList[tx.from] = BigNumber.from(ethWethIn[idx].value || "0").add(
-              BigNumber.from(txList[tx.from] || "0")
-            ))
+          (txList[tx.from] = BigNumber.from(ethWethIn[idx].value || "0").add(
+            BigNumber.from(txList[tx.from] || "0")
+          ))
         );
         const leaderBoardSorted = Object.keys(txList)
           .map((key) => ({ from: key, amount: txList[key] }))
@@ -144,8 +142,13 @@ function SafeList({ provider }) {
           }));
         const promises = [];
         leaderBoardSorted.forEach((x) => {
-          promises.push(provider.lookupAddress(x.from));
+          if (config.network === "mainnet") {
+            promises.push(provider.lookupAddress(x.from));
+          } else {
+            promises.push(null);
+          }
         });
+
         const enses = await Promise.all(promises);
         // console.log('enses', enses);
 
@@ -156,16 +159,16 @@ function SafeList({ provider }) {
         setLeaderboard(leaderBoardSorted);
 
         setSafeTxInfo(ethWethIn.filter((tx) => tx.from === account));
-        console.log("ethWethIn", ethWethIn);
+        // console.log("ethWethIn", ethWethIn);
         let total = 0;
         ethWethIn
           .filter((tx) => tx.from === account)
           .forEach((bal) => {
             total += parseFloat(utils.formatEther(bal.value));
           });
-        console.log("total", total);
-        console.log("bal?.balance", bal?.balance);
-        console.log("tokenBal?.balance", tokenBal?.balance);
+        // console.log("total", total);
+        // console.log("bal?.balance", bal?.balance);
+        // console.log("tokenBal?.balance", tokenBal?.balance);
         setBoban(
           (total /
             utils.formatEther(
@@ -173,7 +176,7 @@ function SafeList({ provider }) {
                 BigNumber.from(tokenBal?.balance || 0)
               )
             )) *
-            100
+          100
         );
       } catch (err) {
         setSafeTxInfo(null);
@@ -190,7 +193,7 @@ function SafeList({ provider }) {
       <Flex justifyContent="space-around">
         <Box ml={5} mr={5}>
           <Text color="#E5E5E5" fontSize={{ base: "xl" }}>
-            Min Goal
+            Goal
           </Text>
           <Text color={config.mainColor} fontSize={{ base: "2xl", lg: "5xl" }}>
             {goal} {config.tokenSymbol}
@@ -202,9 +205,8 @@ function SafeList({ provider }) {
           </Text>
           <Text color={config.mainColor} fontSize={{ base: "2xl", lg: "5xl" }}>
             {safeBalances && (
-              <span>{`${(+safeBalances).toFixed(4)} ${
-                config.tokenSymbol
-              }`}</span>
+              <span>{`${(+safeBalances).toFixed(4)} ${config.tokenSymbol
+                }`}</span>
             )}
           </Text>
         </Box>
@@ -242,8 +244,12 @@ function SafeList({ provider }) {
           <Box paddingBottom={5}>
             <Tab
               color={"#E5E5E5"}
-              rounded={"4px"}
+              rounded={"7px"}
               height={8}
+              border={"solid"}
+                borderColor={config.mainColor}
+                borderWidth={"2px"}
+                padding={5}
               _selected={{ color: "black", bg: config.mainColor }}
             >
               Your Contributions
@@ -253,7 +259,13 @@ function SafeList({ provider }) {
             <Box paddingBottom={5}>
               <Tab
                 color={"#E5E5E5"}
-                rounded={"4px"}
+                rounded={"7px"}
+                border={"solid"}
+                borderColor={config.mainColor}
+                borderWidth={"2px"}
+                padding={5}
+                marginLeft={3}
+                
                 height={8}
                 _selected={{ color: "black", bg: config.mainColor }}
               >
@@ -292,11 +304,10 @@ function SafeList({ provider }) {
                           <Text
                             fontSize={"lg"}
                             color={"#E5E5E5"}
-                          >{`${utils.formatEther(tx.value)} ${
-                            !tx.tokenAddress
+                          >{`${utils.formatEther(tx.value)} ${!tx.tokenAddress
                               ? `${config.tokenSymbol}`
                               : `w${config.tokenSymbol}`
-                          }`}</Text>
+                            }`}</Text>
                         </Box>
                         <Box ml={10}>
                           <Text fontSize={"lg"} color={"#E5E5E5"}>
@@ -361,7 +372,7 @@ function SafeList({ provider }) {
                             </Box>
                             <Box m={10}>
                               <Text fontSize={"lg"} color={"#E5E5E5"}>
-                                {parseFloat(contributor.amount).toFixed(4)}
+                                {parseFloat(contributor.amount).toFixed(2)}
                               </Text>
                             </Box>
                           </Flex>
@@ -446,7 +457,7 @@ function calculateTimeLeft() {
       Days: Math.floor(difference / (1000 * 60 * 60 * 24)),
       Hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
       Minutes: Math.floor((difference / 1000 / 60) % 60),
-      Seconds: Math.floor((difference / 1000) % 60),
+      Seconds: Math.floor((difference / 1000) % 60)
     };
   }
 
@@ -472,7 +483,7 @@ function App() {
       return;
     }
     const setup = async () => {
-      provider.provider.on("chainChanged", (chainId) => {
+      provider.provider.on("chainChanged", chainId => {
         window.location.reload();
       });
     };
@@ -502,7 +513,6 @@ function App() {
         <Stack spacing={2}>
           <Stack spacing={2}>
             <Flex justifyContent="space-between" alignItems="center" p={0}>
-              <ArrowForwardIcon p={0} />
               <Flex
                 justifyContent="flex-end"
                 alignItems="center"
@@ -515,65 +525,72 @@ function App() {
                 logoutOfWeb3Modal={logoutOfWeb3Modal}
               />
             </Flex>
-            <Flex
-              direction={{ base: "column", lg: "row" }}
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Avatar size="2xl" backgroundColor="#0C0C0C" src={config.logo} />
+            <Box paddingTop={100}>
               <Flex
-                color={config.mainColor}
-                alignItems="center"
-                wrap={{ base: "wrap", lg: "nowrap" }}
-              >
-                {timerComponents.length ? (
-                  timerComponents
-                ) : (
-                  <span>Time's up!</span>
-                )}
-              </Flex>
-            </Flex>
-            <Box
-              justifyContent="center"
-              paddingX={{ base: 4, lg: 20 }}
-              paddingBottom={8}
-            >
-              <Text paddingBottom={2} align="center" color={"#E5E5E5"}>
-                Yeet ({config.network}) funds to:{" "}
-              </Text>
-              <Flex
-                direction="row"
+                direction={{ base: "column", lg: "row" }}
                 alignItems="center"
                 justifyContent="center"
-                rounded="16px"
-                backgroundColor="#0C0C0C"
-                border={"solid"}
-                borderColor={config.mainColor}
-                borderWidth={"thin"}
-                padding={{ base: "4", lg: "5" }}
               >
-                {timerComponents.length ? (
-                  <Flex
-                    alignItems="center"
-                    justifyContent="center"
-                    wrap={{ base: "wrap", lg: "nowrap" }}
-                    maxWidth="100%"
-                  >
-                    <Text
-                      fontSize={{ base: "lg", md: "2xl" }}
-                      align="center"
-                      color={config.mainColor}
-                      width="100%"
-                    >
-                      {config.gnosisSafe}
-                    </Text>
-                    <CopyToast toCopy={config.gnosisSafe} />
-                  </Flex>
-                ) : (
-                  <Text color={config.mainColor}>Done. LFG</Text>
-                )}
+                <Avatar
+                  size="2xl"
+                  backgroundColor="#0C0C0C"
+                  src={config.logo}
+                />
+                <Flex
+                  color={config.mainColor}
+                  alignItems="center"
+                  wrap={{ base: "wrap", lg: "nowrap" }}
+                >
+                  {timerComponents.length ? (
+                    timerComponents
+                  ) : (
+                    <span>Time's up!</span>
+                  )}
+                </Flex>
               </Flex>
+              <Box
+                justifyContent="center"
+                paddingX={{ base: 4, lg: 20 }}
+                paddingBottom={8}
+              >
+                <Text paddingBottom={2} align="center" color={"#E5E5E5"}>
+                  Send ETH to:{" "}
+                </Text>
+                <Flex
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="center"
+                  rounded="16px"
+                  backgroundColor="#0C0C0C"
+                  border={"solid"}
+                  borderColor={config.mainColor}
+                  borderWidth={"thin"}
+                  padding={{ base: "4", lg: "5" }}
+                >
+                  {timerComponents.length ? (
+                    <Flex
+                      alignItems="center"
+                      justifyContent="center"
+                      wrap={{ base: "wrap", lg: "nowrap" }}
+                      maxWidth="100%"
+                    >
+                      <Text
+                        fontSize={{ base: "lg", md: "2xl" }}
+                        align="center"
+                        color={config.mainColor}
+                        width="100%"
+                      >
+                        {config.gnosisSafe}
+                      </Text>
+                      <CopyToast toCopy={config.gnosisSafe} />
+                    </Flex>
+                  ) : (
+                    <Text color={config.mainColor}>0x6032DEd1D330d0672253BDfC9a56C971DeE0683F</Text>
+                  )}
+                </Flex>
+              </Box>
             </Box>
+
             <SafeList provider={provider} />
             <HStack
               color={config.mainColor}
