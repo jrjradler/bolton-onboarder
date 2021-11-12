@@ -3,7 +3,9 @@ import { utils, BigNumber } from "ethers";
 import React, { useEffect, useState } from "react";
 
 import logo from "./padawagmi.png";
+
 import useWeb3Modal from "./hooks/useWeb3Modal";
+
 import {
   ChakraProvider,
   Box,
@@ -16,14 +18,10 @@ import {
   Text,
   Button,
   Link,
-  useToast,
-  Tabs,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
+  useToast
 } from "@chakra-ui/react";
-import { CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+
+import { ArrowForwardIcon, CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 
 import { fetchSafeBalances, fetchSafeIncomingTxs } from "./utils/requests";
 
@@ -38,8 +36,7 @@ const config = {
   // nativeToken: true,  // not used
   token: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", // token yeeting in WETH
   tokenSymbol: "ETH", // symbol to dsiplay
-  website: "https://discord.gg/HM97NeDJ5P", // information site
-  showLeaderboard: true, // show leaderboard boolean
+  website: "https://discord.gg/HM97NeDJ5P" // information site
 };
 
 // const addresses = {
@@ -77,10 +74,10 @@ function CopyToast({ toCopy }) {
 
 function SafeList({ provider }) {
   const [account, setAccount] = useState("");
+  const [toggleList] = useState(false);
   const [safeTxInfo, setSafeTxInfo] = useState(null);
   const [, setSafeTxInfoAll] = useState(null);
   const [safeBalances, setSafeBalances] = useState(null);
-  const [leaderBoard, setLeaderboard] = useState(null);
   const [boban, setBoban] = useState(null);
   const [goal] = useState(config.goal);
   // const [network, setNetwork] = useState(null);
@@ -118,57 +115,25 @@ function SafeList({ provider }) {
         // console.log(safeTx);
 
         // weth or eth
-        let ethWethIn = safeTx?.results.filter(
-          (tx) =>
+        const ethWethIn = safeTx?.results.filter(
+          tx =>
+            // tx.from === account &&
             tx.tokenAddress === null ||
             tx.tokenAddress.toLowerCase() === config.token.toLowerCase()
         );
+        setSafeTxInfoAll(ethWethIn);
 
-        let txList = {};
-        ethWethIn.map(
-          (tx, idx) =>
-          (txList[tx.from] = BigNumber.from(ethWethIn[idx].value || "0").add(
-            BigNumber.from(txList[tx.from] || "0")
-          ))
-        );
-        const leaderBoardSorted = Object.keys(txList)
-          .map((key) => ({ from: key, amount: txList[key] }))
-          .sort((a, b) => {
-            return parseInt(b.amount.sub(a.amount).toString());
-          })
-          .map((tx) => ({
-            from: tx.from,
-            amount: utils.formatEther(tx.amount.toString()),
-          }));
-        const promises = [];
-        leaderBoardSorted.forEach((x) => {
-          if (config.network === "mainnet") {
-            promises.push(provider.lookupAddress(x.from));
-          } else {
-            promises.push(null);
-          }
-        });
-
-        const enses = await Promise.all(promises);
-        // console.log('enses', enses);
-
-        leaderBoardSorted.forEach((x, idx) => {
-          x.fromEns = enses[idx];
-        });
-
-        setLeaderboard(leaderBoardSorted);
-
-        setSafeTxInfo(ethWethIn.filter((tx) => tx.from === account));
-        // console.log("ethWethIn", ethWethIn);
+        setSafeTxInfo(ethWethIn.filter(tx => tx.from === account));
+        console.log("ethWethIn, toggleList", ethWethIn, toggleList);
         let total = 0;
         ethWethIn
-          .filter((tx) => tx.from === account)
-          .forEach((bal) => {
+          .filter(tx => tx.from === account)
+          .forEach(bal => {
             total += parseFloat(utils.formatEther(bal.value));
           });
-        // console.log("total", total);
-        // console.log("bal?.balance", bal?.balance);
-        // console.log("tokenBal?.balance", tokenBal?.balance);
+        console.log("total", total);
+        console.log("bal?.balance", bal?.balance);
+        console.log("tokenBal?.balance", tokenBal?.balance);
         setBoban(
           (total /
             utils.formatEther(
@@ -176,7 +141,7 @@ function SafeList({ provider }) {
                 BigNumber.from(tokenBal?.balance || 0)
               )
             )) *
-          100
+            100
         );
       } catch (err) {
         setSafeTxInfo(null);
@@ -186,7 +151,7 @@ function SafeList({ provider }) {
       }
     }
     fetchAccount();
-  }, [account, provider, setSafeTxInfo, setSafeTxInfoAll]);
+  }, [account, provider, setSafeTxInfo, setSafeTxInfoAll, toggleList]);
 
   return (
     <>
@@ -205,8 +170,9 @@ function SafeList({ provider }) {
           </Text>
           <Text color={config.mainColor} fontSize={{ base: "2xl", lg: "5xl" }}>
             {safeBalances && (
-              <span>{`${(+safeBalances).toFixed(4)} ${config.tokenSymbol
-                }`}</span>
+              <span>{`${(+safeBalances).toFixed(4)} ${
+                config.tokenSymbol
+              }`}</span>
             )}
           </Text>
         </Box>
@@ -220,171 +186,48 @@ function SafeList({ provider }) {
         </Box>
       </Flex>
 
-      {!account && (
-        <Flex
-          border={"solid"}
-          rounded={"sm"}
-          borderColor={"#272727"}
-          borderWidth={"thin"}
-          h={20}
-          ml={20}
-          mr={20}
-          justifyContent="center"
-          align="center"
-        >
-          <Box>
-            <Text fontSize="2xl" color="#E5E5E5">
-              Connect Wallet
-            </Text>
-          </Box>
-        </Flex>
-      )}
-      <Tabs>
-        <TabList ml={20} mr={20}>
-          <Box paddingBottom={5}>
-            <Tab
-              color={"#E5E5E5"}
-              rounded={"7px"}
-              height={8}
-              border={"solid"}
-                borderColor={config.mainColor}
-                borderWidth={"2px"}
-                padding={5}
-              _selected={{ color: "black", bg: config.mainColor }}
-            >
-              Your Contributions
-            </Tab>
-          </Box>
-          {config.showLeaderboard && (
-            <Box paddingBottom={5}>
-              <Tab
-                color={"#E5E5E5"}
-                rounded={"7px"}
-                border={"solid"}
-                borderColor={config.mainColor}
-                borderWidth={"2px"}
-                padding={5}
-                marginLeft={3}
-                
-                height={8}
-                _selected={{ color: "black", bg: config.mainColor }}
-              >
-                Leaderboard
-              </Tab>
-            </Box>
-          )}
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <Flex
-              border={"solid"}
-              rounded={"sm"}
-              borderColor={"#272727"}
-              borderWidth={"thin"}
-              ml={20}
-              mr={20}
-            >
-              <Box w="100%">
-                <Flex backgroundColor="#0C0C0C" flexDirection={"column"}>
-                  {safeTxInfo &&
-                    safeTxInfo?.map((tx, idx) => (
-                      <Flex
-                        justifyContent="space-between"
-                        w="100%"
-                        align="center"
-                        h={20}
-                        key={idx}
-                      >
-                        <Box ml={10}>
-                          <Text fontSize={"lg"} color={"#E5E5E5"}>
-                            {idx + 1 + ""}
-                          </Text>
-                        </Box>
-                        <Box ml={10} key={idx}>
-                          <Text
-                            fontSize={"lg"}
-                            color={"#E5E5E5"}
-                          >{`${utils.formatEther(tx.value)} ${!tx.tokenAddress
-                              ? `${config.tokenSymbol}`
-                              : `w${config.tokenSymbol}`
-                            }`}</Text>
-                        </Box>
-                        <Box ml={10}>
-                          <Text fontSize={"lg"} color={"#E5E5E5"}>
-                            {new Date(tx.executionDate).toLocaleString()}
-                          </Text>
-                        </Box>
-                        <Box m={10}>
-                          <Text fontSize={"lg"} color={config.mainColor}>
-                            {tx.transactionHash.substring(0, 6) +
-                              "..." +
-                              tx.transactionHash.substring(60)}
-                            <CopyToast toCopy={tx.transactionHash} />
-                          </Text>
-                        </Box>
-                      </Flex>
-                    ))}
-                </Flex>
-              </Box>
-            </Flex>
-          </TabPanel>
-          {config.showLeaderboard && (
-            <TabPanel>
+      <Box w="100%">
+        <Flex backgroundColor="#0C0C0C" flexDirection={"column"}>
+          {safeTxInfo &&
+            safeTxInfo?.map((tx, idx) => (
               <Flex
-                border={"solid"}
-                rounded={"sm"}
-                borderColor={"#272727"}
-                borderWidth={"thin"}
-                ml={20}
-                mr={20}
+                justifyContent="space-between"
+                w="100%"
+                align="center"
+                h={20}
+                key={idx}
               >
-                <Box w="100%">
-                  <Flex backgroundColor="#0C0C0C" flexDirection={"column"}>
-                    <Box>
-                      {leaderBoard &&
-                        leaderBoard.map((contributor, idx) => (
-                          <Flex
-                            justifyContent="space-between"
-                            w="100%"
-                            align="center"
-                            h={20}
-                            key={idx}
-                          >
-                            <Box ml={10}>
-                              <Text fontSize={"lg"} color={"#E5E5E5"}>
-                                {idx + 1 + ""}
-                              </Text>
-                            </Box>
-                            <Box ml={10}>
-                              {contributor.fromEns ? (
-                                <Text fontSize={"lg"} color={config.mainColor}>
-                                  {contributor.fromEns}
-                                  <CopyToast toCopy={contributor.from} />
-                                </Text>
-                              ) : (
-                                <Text fontSize={"lg"} color={config.mainColor}>
-                                  {contributor.from.substring(0, 6) +
-                                    "..." +
-                                    contributor.from.substring(38)}
-                                  <CopyToast toCopy={contributor.from} />
-                                </Text>
-                              )}
-                            </Box>
-                            <Box m={10}>
-                              <Text fontSize={"lg"} color={"#E5E5E5"}>
-                                {parseFloat(contributor.amount).toFixed(2)}
-                              </Text>
-                            </Box>
-                          </Flex>
-                        ))}
-                    </Box>
-                  </Flex>
+                <Box ml={10}>
+                  <Text fontSize={"lg"} color={"#E5E5E5"}>
+                    {idx + 1 + ""}
+                  </Text>
+                </Box>
+                <Box ml={10} key={idx}>
+                  <Text fontSize={"lg"} color={"#E5E5E5"}>{`${utils.formatEther(
+                    tx.value
+                  )} ${
+                    !tx.tokenAddress
+                      ? `${config.tokenSymbol}`
+                      : `w${config.tokenSymbol}`
+                  }`}</Text>
+                </Box>
+                <Box ml={10}>
+                  <Text fontSize={"lg"} color={"#E5E5E5"}>
+                    {new Date(tx.executionDate).toLocaleString()}
+                  </Text>
+                </Box>
+                <Box m={10}>
+                  <Text fontSize={"lg"} color={config.mainColor}>
+                    {tx.transactionHash.substring(0, 6) +
+                      "..." +
+                      tx.transactionHash.substring(60)}
+                    <CopyToast toCopy={tx.transactionHash} />
+                  </Text>
                 </Box>
               </Flex>
-            </TabPanel>
-          )}
-        </TabPanels>
-      </Tabs>
+            ))}
+        </Flex>
+      </Box>
     </>
   );
 }
