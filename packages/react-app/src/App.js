@@ -27,6 +27,7 @@ import { CopyIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 
 import { fetchSafeBalances, fetchSafeIncomingTxs } from "./utils/requests";
 
+
 const config = {
   network: "mainnet", // set network this will be using mainnet/xdai
   logo: logo, // change the logo here
@@ -184,6 +185,10 @@ function SafeList({ provider }) {
         setSafeTxInfoAll(null);
         console.error(err);
       }
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
+      });
     }
     fetchAccount();
   }, [account, provider, setSafeTxInfo, setSafeTxInfoAll]);
