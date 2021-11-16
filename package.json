@@ -23,8 +23,5 @@
     "packages": [
       "packages/*"
     ]
-  },
-  "dependencies": {
-    "web3": "^1.6.1"
   }
 }
