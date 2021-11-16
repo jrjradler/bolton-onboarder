@@ -239,8 +239,8 @@ function SafeList({ provider }) {
           </Box>
         </Flex>
       )}
-      <Tabs>
-        <TabList ml={20} mr={20}>
+      <Tabs align="center">
+        <TabList ml={{sm:20}}   >
           <Box paddingBottom={5}>
             <Tab
               color={"#E5E5E5"}
@@ -329,7 +329,7 @@ function SafeList({ provider }) {
             </Flex>
           </TabPanel>
           {config.showLeaderboard && (
-            <TabPanel>
+            <TabPanel style={{marginRight:"auto",marginLeft:"auto"}}>
               <Flex
                 border={"solid"}
                 rounded={"sm"}
