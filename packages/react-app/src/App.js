@@ -559,7 +559,7 @@ function App() {
                 paddingBottom={8}
               >
                 <Text paddingBottom={2} align="center" color={"#E5E5E5"}>
-                  Send ETH to:{" "}
+                  Send ERC20 Tokens to:{" "}
                 </Text>
                 <Flex
                   direction="row"
